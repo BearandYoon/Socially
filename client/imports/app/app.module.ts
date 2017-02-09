@@ -1,14 +1,16 @@
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { AppComponent } from "./app.component";
-import { DemoComponent } from "./demo/demo.component";
-import { DemoDataService } from "./demo/demo-data.service";
+import { NgModule }               from "@angular/core";
+import { BrowserModule }          from "@angular/platform-browser";
+import { FormsModule,
+    ReactiveFormsModule }         from '@angular/forms';
+import { AppComponent }           from "./app.component";
+import { DemoDataService }        from "./demo/demo-data.service";
+import { PARTIES_DECLARATIONS }   from './parties';
 
 @NgModule({
   // Components, Pipes, Directive
   declarations: [
     AppComponent,
-    DemoComponent
+    ...PARTIES_DECLARATIONS
   ],
   // Entry Components
   entryComponents: [
@@ -20,7 +22,9 @@ import { DemoDataService } from "./demo/demo-data.service";
   ],
   // Modules
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   // Main Component
   bootstrap: [ AppComponent ]
