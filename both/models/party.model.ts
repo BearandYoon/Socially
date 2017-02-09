@@ -9,4 +9,5 @@ export interface Party extends CollectionObject {
     description: string;
     location: string;
     owner?: string;
+    public: boolean;
 }
