@@ -2,10 +2,16 @@
  * Created by mac on 2/9/17.
  */
 import { Meteor } from 'meteor/meteor';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import { Parties } from '../../../both/collections/parties.collection';
 
-Meteor.publish('parties', function() {
-    return Parties.find(buildQuery.call(this));
+interface Options {
+    [key: string]: any;
+};
+
+Meteor.publish('parties', function(options: Options) {
+    Counts.publish(this, 'numberOfParties', Parties.collection.find(buildQuery.call(this)), { noReady: true });
+    return Parties.find(buildQuery.call(this), options);
 });
 
 Meteor.publish('party', function(partyId: string) {

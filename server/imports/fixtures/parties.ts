@@ -20,9 +20,18 @@ export function loadParties() {
             name: 'Savage lounging',
             description: 'Leisure suit required. And only fiercest manners.',
             location: 'San Francisco',
-            public: true
+            public: false
         }];
 
         parties.forEach((party: Party) => Parties.insert(party));
+
+        for (var i = 0; i < 27; i++) {
+            Parties.insert({
+                name: Fake.sentence(50),
+                location: Fake.sentence(10),
+                description: Fake.sentence(100),
+                public: true
+            });
+        }
     }
 }
