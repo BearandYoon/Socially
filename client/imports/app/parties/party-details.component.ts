@@ -44,7 +44,10 @@ export class PartyDetailsComponent implements OnInit, OnDestroy {
                 }
 
                 this.partySub = MeteorObservable.subscribe('party', this.partyId).subscribe(() => {
-                    this.party = Parties.findOne(this.partyId);
+                    MeteorObservable.autorun().subscribe(() => {
+                        this.party = Parties.findOne(this.partyId);
+                        this.getUsers(this.party);
+                    });
                 });
 
                 if (this.uninvitedSub) {
@@ -52,19 +55,34 @@ export class PartyDetailsComponent implements OnInit, OnDestroy {
                 }
 
                 this.uninvitedSub = MeteorObservable.subscribe('uninvited', this.partyId).subscribe(() => {
-                    this.users = Users.find({
-                        _id: {
-                            $ne: Meteor.userId()
-                        }
-                    }).zone();
+                    this.getUsers(this.party);
                 });
             });
+    }
+
+    invite(user: Meteor.User) {
+        MeteorObservable.call('invite', this.party._id, user._id).subscribe(() => {
+            alert('User successfully invited.');
+        }, (error) => {
+            alert(`Failed to invite due to ${error}`);
+        });
     }
 
     ngOnDestroy() {
         this.paramsSub.unsubscribe();
         this.partySub.unsubscribe();
         this.uninvitedSub.unsubscribe();
+    }
+
+    getUsers(party: Party) {
+        if (party) {
+            this.users = Users.find({
+                _id: {
+                    $nin: party.invited || [],
+                    $ne: Meteor.userId()
+                }
+            }).zone();
+        }
     }
 
     saveParty() {
